@@ -1,0 +1,11 @@
+<?php
+/*
+	Controllers_Clinic_Ksc_{Name}
+*/
+class Controllers_Clinic_Ksc_Tarif extends Modules_Plugin_Base {
+private $maxLimit0 = 15; //Manual
+private $maxLimit = 100; //Manual
+
+
+
+}
