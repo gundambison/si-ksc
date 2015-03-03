@@ -1,0 +1,1 @@
+<?phpclass Ksc_Model extends CI_Model{	function tes()	{		return "waktu:".mktime();			}	}

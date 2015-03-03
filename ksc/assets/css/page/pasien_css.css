@@ -1,0 +1,59 @@
+.gigi1{
+/*kiri atas*/
+border-left:1px solid black;
+border-bottom:1px solid black;
+}
+.gigi2{
+/*kanan atas*/
+border-right:1px solid black;
+border-bottom:1px solid black;
+}
+.gigi3{
+/*kiri atas*/
+border-left:1px solid black;
+border-top:1px solid black;
+}
+.gigi4{
+/*kanan atas*/
+border-right:1px solid black;
+border-top:1px solid black;
+}
+
+.gigiBox{
+	width:100px;
+	text-align:center;
+	float: left;
+margin-right: 10px;	
+	padding:5px 3px;
+}
+.mr-date
+{
+	font-size:14px;
+	border-bottom:2px solid rgba(160, 186, 251, 0.78);
+	margin-bottom:20px;
+}
+
+dl.medrec dt{
+	margin:0 10px; float:left;
+	width:30%;	
+	font-size:12px;
+	/*border-left:1px solid rgba(160, 186, 251, 0.58);*/
+	padding:10px 15px;
+}
+dl.medrec dt.head h4{
+border-bottom:2px solid #9DAD9F;
+}
+
+dl.medrec dt.head{
+	text-align:center;
+	font-size:16px;
+	
+}
+
+.clear{
+	clear:both;
+	margin-bottom:10px;
+}
+#obatText{
+	height:200px;
+}
