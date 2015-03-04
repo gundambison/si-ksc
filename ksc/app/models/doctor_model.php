@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /*
- 
+ Created : Gunawan Wibisono
 */
 class Doctor_model extends CI_Model 
 {
