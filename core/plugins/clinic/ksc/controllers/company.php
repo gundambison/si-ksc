@@ -48,6 +48,23 @@ var $model; //main model
 		$this->logger->write('debug', 'HTTP REQUEST: '.print_r($_REQUEST,1));
 		
 	}
+
+	public function detail(){
+		$id=$this->input->post('com_id');
+		$company=$this->model->detail($id);
+		$result=array(
+			'total'=>$this->model->total(),
+		);
+		$result['company']=$company;
+		 
+
+		if($company){			 
+			$this->_success($result);
+		}
+		//failed harus ada di akhir
+		$this->_failed(209);		
+
+	}
 	
 	public function all()
 	{

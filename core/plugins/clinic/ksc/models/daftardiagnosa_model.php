@@ -94,7 +94,7 @@ var $tableDiagnosa ='klinik_diagnosa';
 	
 		$query=$this->query($sql,1 ); //debug
 		if($query){
-			return $result;
+			return true;
 		}
 		else{
 			return false;		

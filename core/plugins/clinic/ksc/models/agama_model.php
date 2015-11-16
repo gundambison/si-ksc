@@ -93,7 +93,7 @@ var $table='klinik_religion'; //main table
 	
 		$query=$this->query($sql,1 ); //debug
 		if($query){
-			return $result;
+			return true;
 		}
 		else{
 			return false;		
@@ -110,4 +110,4 @@ var $table='klinik_religion'; //main table
 		$this->logger->write('info', 'model: Agama');
 	}
 	
-}
+}	

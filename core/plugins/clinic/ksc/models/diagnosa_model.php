@@ -34,6 +34,34 @@ var $table='klinik_diagnosa'; //main table
 /*
 	Detail Diagnosa berdasarkan id
 */	
+	public function search($str )
+	{
+		$sql=sprintf("select 
+		`d_id`, `d_code1`, `d_code2`, `d_index`, `d_name`, `d_stat`
+		from 
+		`{$this->table}` 
+		where 
+		d_index like '%s' or d_name like '%s' or d_code1 like '%s' or d_code2 like '%s'
+		order by d_name
+		limit %d
+		", 
+		'%'.$str.'%','%'.$str.'%', '%'.$str.'%','%'.$str.'%',
+		150); //max untuk hal tak di inginkan
+		$query=$this->query($sql,1 ); //debug
+		if($query){
+			$result=array();
+			foreach( $this->_fetchAll($query) as $data ){				 
+				$row=$this->cleanFieldName('d_',$data);
+				$result[]=$row;				 
+			}
+		//	$this->logger->write('info', 'total diagnosa:'.count($result));
+			return $result;
+		}
+		else{
+			return false;		
+		}
+	}
+
 	public function getAll( )
 	{
 		$sql=sprintf("select 
@@ -93,7 +121,7 @@ var $table='klinik_diagnosa'; //main table
 	
 		$query=$this->query($sql,1 ); //debug
 		if($query){
-			return $result;
+			return true;
 		}
 		else{
 			return false;		

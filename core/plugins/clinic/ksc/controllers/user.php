@@ -52,7 +52,7 @@ private $maxLimit = 100; //Manual
 		$data = $this->input->post();
 /*================check valid username & password ===*/
 		$detail= $user->detail($username);
-		 
+		$this->logger->write('debug','detail username:'.$username." data:".json_encode($data)); 
 		if(!isset($detail['id'])) 
 			$this->_failed(202);
 		

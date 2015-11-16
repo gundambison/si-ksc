@@ -30,7 +30,6 @@ var $table='jos_users';
 		$sql=sprintf("select count(id) c from %s where username='%s' and password='%s' and block=0",
 		$this->table, $username,$pass2);
 		$data=$this->resOne($sql,1 	);
-		
 		return $data['c']==1?true:false;
 	}
 	

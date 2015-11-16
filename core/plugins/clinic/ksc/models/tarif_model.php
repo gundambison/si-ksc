@@ -54,6 +54,30 @@ var $table='klinik_tarif'; //main table
 			return false;		
 		}
 	}
+	
+	public function search( $data )
+	{
+		$cari = '%'.addslashes($data['search']).'%';
+		$sql=sprintf("select 
+		`tarif_id`, `tarif_name`, `tarif_price`, `tarif_tariftypeid`, `tarif_persen`
+		from 
+		`{$this->table}` 
+		where tarif_name like '%s' or tarif_id like '%s'
+		order by tarif_name asc
+		limit %d",$cari, addslashes($data['search']).'%',100); //max untuk hal tak di inginkan
+		$query=$this->query($sql,1 ); //debug
+		if($query){
+			$result=array();
+			foreach( $this->_fetchAll($query) as $data ){				 
+				$row=$this->cleanFieldName('tarif_',$data);
+				$result[]=$row;				 
+			}
+			return $result;
+		}
+		else{
+			return false;		
+		}
+	}
 	  
 /*
 	Insert data 

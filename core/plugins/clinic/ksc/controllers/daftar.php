@@ -13,11 +13,37 @@ class Controllers_Clinic_Ksc_Daftar extends Modules_Plugin_Base {
 private $maxLimit0 = 15; //Manual
 private $maxLimit = 100; //Manual
 var $model; //main model
+
+	public function detail(){
+		$model = $this->_loadModel('daftar_model');
+		$doctormodel = $this->_loadModel('doctor_model');
+		$dafpatmodel = $this->_loadModel('daftarpasien_model');
+		$pasienmodel = $this->_loadModel('pasien_model');
+		$data= $this->input->post();
+		
+		$result=array();//'post'=>$data);
+		$detail=$model->detail($data['daf_id']);
+		$result['daftar']=$detail;
+		
+		$dt= $dafpatmodel->detail($data['daf_id'],'dafpat_dafid');		 
+			$result['daftarpasien']=$dt['num']==1?array($dt):$dt ;
+		$result['total']=$result['daftarpasien'][0]['total'];
+		$result['doc_id']=$detail['doc_id'];
+		$result['pasien']=$pasienmodel->detailSimple($detail['pat_id']);
+		$result['doctor']=$doctormodel->detail($detail['doc_id']);
+		$result['tarif']=$model->showTarif($data['daf_id']);
+/*		
+	list field di input : `daf_id`, `daf_timeEnter`, `daf_timeArrive`, `daf_userInp`, `daf_comment`, `daf_enable`, `daf_deleteBy` 	
+*/		 
+		$this->_success($result);
+		$this->_failed(209);
+		
+	}
 	
 	public function __construct() {
 		parent::__construct();
 //		$this->logger->write('debug', 'HTTP REQUEST: '.print_r($_REQUEST,1));
-		$this->model = $this->_loadModel('daftar_model'); //base
+		//$this->model = $this->_loadModel('daftar_model'); //base
 // 		set language (optional)
 		$lang = $this->input->post('lang');
 		if($lang !== false){
@@ -38,7 +64,6 @@ var $model; //main model
 		$this->appcode    = $this->input->post('app_code');
 		
 	}
-	 
 	/**
 	 * API INDEX Daftar
 	 * @param ccode
@@ -69,36 +94,40 @@ var $model; //main model
 	}
 	
 	public function add(){
-		$this->checkToken();
+		$model = $this->_loadModel('daftar_model');
+		//$this->checkToken();
 //============tambah data bila diperlukan
-		$data= $this->input->post();
-		$data['status']=1;
+		$data= array();//$this->input->post();
+		$data['daf_enable']=0;
 /*		
 	list field di input : `daf_id`, `daf_timeEnter`, `daf_timeArrive`, `daf_userInp`, `daf_comment`, `daf_enable`, `daf_deleteBy` 	
 */		
-		if($this->model->add($data))
-			$this->_success();
+		$id=$model->add($data);
+		if($id)
+			$this->_success(array('id'=>$id));
 		$this->_failed(209);
 	}
 	
 	public function update(){
+		$model= $this->_loadModel('daftar_model');
 		$this->checkToken();
 //============tambah data bila diperlukan
-		$data= $this->input->post();
+		$tmp= $this->input->post('update');
+		$data=json_decode($tmp,TRUE);
 		$id= $this->input->post('id'); //atau kode bila bukan angka
-		$data['status']=1;
+		$data['daf_enable']=1;
 /*		
 	list field di input : `daf_id`, `daf_timeEnter`, `daf_timeArrive`, `daf_userInp`, `daf_comment`, `daf_enable`, `daf_deleteBy` 	
 	id : daf_id
 */		
-		$key="`daf_id`='{$id}'";
-		if($this->model->update($data,$key))
+		$key= $id ;
+		
+		if($model->update($data,$key))
 			$this->_success();
 		$this->_failed(209);
 	}
 	
-	function logs()
-	{
+	function logs(){
 		$dafpasien=$this->_loadModel('daftarpasien_model');
 	//	$diag=$this->_loadModel('daftardiagnosa_model');
 		

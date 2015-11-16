@@ -57,13 +57,20 @@ var $model; //main model
 /*		
 	list field tersedia : `d_id`, `d_code1`, `d_code2`, `d_index`, `d_name`, `d_stat` 	
 */
-		$diagnosa=$this->model->getAll();
+		$cari=$this->input->post('search');
+		if($cari!=''){
+			$diagnosa=$this->model->search($cari);
+		}else{
+			$diagnosa=$this->model->getAll();
+		}
+		
 		$result['show']=count($diagnosa);
 		$result['diagnosa']=$diagnosa;
-		
-		if($diagnosa){			 
+		if(count($diagnosa)==0)$diagnosa=array();
+		if($diagnosa!==false){			 
 			$this->_success($result);
 		}
+		$this->logger->write('debug', 'resul:'.json_encode($result));
 		//failed harus ada di akhir
 		$this->_failed(209);		
 	}

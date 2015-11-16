@@ -38,8 +38,9 @@ var $daftarPasien='klinik_daftarpasien';
 /*
 	Detail Doctortypes berdasarkan id
 */	
-	public function getAll( )
+	public function getAll($showDoc=0)
 	{
+		 
 		$sql=sprintf("select 
 		`spec_id`, `spec_name`, `spec_desc`, `spec_type`
 		from 
@@ -50,6 +51,7 @@ var $daftarPasien='klinik_daftarpasien';
 			$result=array();
 			foreach( $this->_fetchAll($query) as $data ){				 
 				$row=$this->cleanFieldName('spec_',$data);
+				
 				$result[]=$row;				 
 			}
 			return $result;
@@ -107,7 +109,7 @@ var $daftarPasien='klinik_daftarpasien';
 /*
  
 */
-	public function pasien($id=0, $limit=15 ){
+	public function pasien($id=0, $limit=15,$start=0 ){
 		if($limit <=0) $limit=15;
 		$now=date("Y-m-d", strtotime('-5 week'));
 		$sql = sprintf("select pat_id pasien_id,dafpat_dafid daftar, concat(pat_name1, ' ',pat_name2) name, `dafpat_id` daftar_pasien,`dafpat_date` daftarDate,`doc_id`,`doc_name` dokter ,`spec_id`, `spec_name` type,if(pat_gen=1,'M','F') gender, pat_birth,   pat_blood,  pat_mr
@@ -120,18 +122,30 @@ var $daftarPasien='klinik_daftarpasien';
 		and `spec_id`=%d
 		and `dafpat_date` > '%s'
 		order by `dafpat_date` desc
-		limit %d",
-		$this->table, $this->tableDoctor,$this->daftarPasien, $this->tablePasien, $this->tableMr,$id, $now, $limit);
+		limit %d,%d",
+		$this->table, $this->tableDoctor,$this->daftarPasien, $this->tablePasien, $this->tableMr,$id, $now, $start,$limit);
 		
-		
+		$sqlMedrec="select count(id) totalMr from %s where daftar='%s' ";
+  
 		$query=$this->query($sql,1 ); //1 for debug
 		if($query){
 			$result=array();
 			foreach( $this->_fetchAll($query) as $row ){
 				if($row['pat_mr']=='') $row['pat_mr']=sprintf("%010s",$row['pasien_id']);
+				 
+				$sql=sprintf($sqlMedrec,'klinik_medrecdaftar', $row['daftar']);				
+				$mrData=$this->resOne($sql);
+				if($mrData['totalMr']!=0){
+					$row['medrecStatus']=1; 
+					$this->logger->write('info', 'pasien:'.$row['pasien_id'].'|name:'.$row['name']. '|total:'.$mrData['totalMr']);
+				}else{ 
+					$row['medrecStatus']=0;
+				}
+				
 				$row=$this->cleanFieldName('dafpat_',$row); 
 				$row=$this->cleanFieldName('pat_',$row); 
 				$daf=$row['daftar']; 
+ 				
 				$result[$daf]=$row;
 				//$tmp=implode(", ",array_keys($row) );
 			}
@@ -146,8 +160,8 @@ var $daftarPasien='klinik_daftarpasien';
 		and `dafpat_docid`='0'			 
 		and `dafpat_date` > '%s'
 		order by `dafpat_date` desc
-		limit %d",
-		 $this->daftarPasien, $this->tablePasien, $this->tableMr, $now, $limit);
+		limit %d,%d",
+		 $this->daftarPasien, $this->tablePasien, $this->tableMr, $now, $start, $limit);
 				$query=$this->query($sql,1 ); //1 for debug
 				if($query){ 
 					foreach( $this->_fetchAll($query) as $row ){

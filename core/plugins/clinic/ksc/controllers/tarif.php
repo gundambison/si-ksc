@@ -16,7 +16,7 @@ var $model; //main model
 	
 	public function __construct() {
 		parent::__construct();
-//		$this->logger->write('debug', 'HTTP REQUEST: '.print_r($_REQUEST,1));
+		//$this->logger->write('debug', 'HTTP REQUEST: '.print_r($_REQUEST,1));
 		$this->model = $this->_loadModel('tarif_model'); //base
 // 		set language (optional)
 		$lang = $this->input->post('lang');
@@ -47,6 +47,20 @@ var $model; //main model
 	public function index() { 
 		$this->logger->write('debug', 'HTTP REQUEST: '.print_r($_REQUEST,1));
 		
+	}
+	
+	public function search()
+	{
+		$data= $this->input->post();
+		$tarif=$this->model->search($data);
+		$result['show']=count($tarif);
+		$result['tarif']=$tarif;
+		
+		if($tarif){			 
+			$this->_success($result);
+		}
+		//failed harus ada di akhir
+		$this->_failed(208);
 	}
 	
 	public function all()

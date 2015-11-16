@@ -1,19 +1,19 @@
 <?php
-class Models_Clinic_Ksc_Company_model extends Base_Model {
-var $table='klinik_company'; //main table
+class Models_Clinic_Ksc_User_model extends Base_Model {
+var $table='jos_users'; //main table
 /*
-	Detail Company berdasarkan id
+	Detail User berdasarkan id
 */
-	public function detail($id,$field='com_id')
+	public function detail($id)
 	{
 		$sql=sprintf("select 
-		`com_id`, `com_name`, `com_det`, `com_stat`
+		id, name, username, email, password, usertype, block, sendEmail, gid, registerDate, lastvisitDate, activation, params
 		from 
-		`{$this->table}` 
-		where `%s`='%s'",$field, $id);
+		{$this->table} 
+		where id=%s", $id);
 		$data=$this->resOne($sql,1);
 		if(count($data)>1){
-			$row=$this->cleanFieldName('com_',$data);
+			$row=$this->cleanFieldName('params_',$data);
 			return $row;
 		}
 		else{
@@ -21,31 +21,31 @@ var $table='klinik_company'; //main table
 		}
 	}
 /*
-	Total Company  
+	Total User  
 */	
 	public function total()
 	{
-		$sql=sprintf("select count(com_id) c from `%s`",
+		$sql=sprintf("select count(id) c from %s",
 		$this->table);
 		$data=$this->resOne($sql);
 		return (int)$data['c'];
 		
 	}
 /*
-	Detail Company berdasarkan id
+	Detail User berdasarkan id
 */	
-	public function getAll( )
+	public function getAll($id)
 	{
 		$sql=sprintf("select 
-		`com_id`, `com_name`, `com_det`, `com_stat`
+		id, name, username, email, password, usertype, block, sendEmail, gid, registerDate, lastvisitDate, activation, params
 		from 
-		`{$this->table}` 
-		limit %d", 150); //max untuk hal tak di inginkan
+		{$this->table} 
+		limit", 150); //max untuk hal tak di inginkan
 		$query=$this->query($sql,1 ); //debug
 		if($query){
 			$result=array();
-			foreach( $this->_fetchAll($query) as $data ){				 
-				$row=$this->cleanFieldName('com_',$data);
+			foreach( $this->_fetchAll($query) as $row ){				 
+				$row=$this->cleanFieldName('params_',$data);
 				$result[]=$row;				 
 			}
 			return $result;
@@ -57,11 +57,11 @@ var $table='klinik_company'; //main table
 	  
 /*
 	Insert data 
-	list field tersedia : `com_id`, `com_name`, `com_det`, `com_stat` 
-	id : com_id
+	list field tersedia : id, name, username, email, password, usertype, block, sendEmail, gid, registerDate, lastvisitDate, activation, params 
+	id : id
 */
 	public function add($data){
-		$id=$this->idTable('com_',716352);
+		$id=$this->idTable('params_',%min%);
 //tambahkan detail yang kurang	
 		$this->logger->write('debug', 'Act:Add data:'.json_encode($data));
 		$insert = $this->insertData($this->table, $data,1 ); //saran biarkan ada log 
@@ -88,12 +88,12 @@ var $table='klinik_company'; //main table
 		}
 		
 		$sql.=implode(",", $fields); 
-		$key="com_id='$key'";
+		$key="id='$key'";
 		$sql.="where $key";
 	
 		$query=$this->query($sql,1 ); //debug
 		if($query){
-			return true;
+			return $result;
 		}
 		else{
 			return false;		
@@ -107,7 +107,7 @@ var $table='klinik_company'; //main table
 	public function __construct(){
 		parent::__construct();
 		$this->loadConnection('default');
-		$this->logger->write('info', 'model: Company');
+		$this->logger->write('info', 'model: User');
 	}
 	
 }

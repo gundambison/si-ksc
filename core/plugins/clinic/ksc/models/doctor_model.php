@@ -1,23 +1,53 @@
 <?php
 class Models_Clinic_Ksc_Doctor_model extends Base_Model {
 var $table='klinik_doctor'; //main table
+var $tableType='klinik_docspecialis';
+	public function searchBasic($id, $field)
+	{
+		$sql=sprintf("select 
+		`doc_id` id
+		from 
+		`{$this->table}` 
+		where `%s`='%s'",$field, $id);
+		$query=$this->query($sql  ); //1 for debug
+		if($query){ 
+			$data=array();
+			foreach( $this->_fetchAll($query) as $row ){
+				$row2=$this->detail($row['id']);
+				$data[]=$row2;
+			}
+			return $data;
+		}else{return false;}
+	}
 /*
 	Detail Doctor berdasarkan id
 */
 	public function detail($id,$field='doc_id')
 	{
+		if($id==0){
+			return array( 
+			  'doc_id'=>0,
+			  'doc_name'=>'GP',
+			  'doc_addr'=>'',
+			  'doc_specId'=>'',
+			  'doc_phone'=>'',
+			  'doc_stat'=>1,
+			  'doc_type'=>1
+			);
+		}
 		$sql=sprintf("select 
-		`doc_id`, `doc_name`, `doc_addr`, `doc_specId`, `doc_phone`, `doc_stat`, `doc_type`
+		`doc_id`, `doc_name`, `doc_addr`, `doc_specId`, `doc_phone`, `doc_stat`, `doc_type`, spec_name `type`
 		from 
-		`{$this->table}` 
-		where `%s`='%s'",$field, $id);
-		$data=$this->resOne($sql,1);
+		`{$this->table}` , `{$this->tableType}`
+		where `%s`='%s' and spec_id=doc_specId",$field, $id);
+		$data=$this->resOne($sql,1 );
 		if(count($data)>1){
 			$row=$this->cleanFieldName('doc_',$data);
+			$row['post']=$id;
 			return $row;
 		}
 		else{
-			return false;
+			return array('sql'=>$sql);
 		}
 	}
 /*
@@ -93,7 +123,7 @@ var $table='klinik_doctor'; //main table
 	
 		$query=$this->query($sql,1 ); //debug
 		if($query){
-			return $result;
+			return true;
 		}
 		else{
 			return false;		

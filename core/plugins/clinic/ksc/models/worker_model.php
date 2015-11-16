@@ -93,7 +93,7 @@ var $table='work_user'; //main table
 	
 		$query=$this->query($sql,1 ); //debug
 		if($query){
-			return $result;
+			return true;
 		}
 		else{
 			return false;		
