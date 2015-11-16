@@ -1,0 +1,13 @@
+* buat controller di http://localhost/erp/index.php/admin/controllerku
+* copy paste ke controller tujuan
+* jalankan 
+* buat module di 
+* buka manajemen table http://localhost/erp/admin/tables
+* buat bila tidak ada
+* klik tablenya lalu generate
+* copy paste sesuai tempatnya
+* JS = edit penamaannya 
+* Data = edit nama module yg digunakan >>$module="permision"; //change this
+* Save = edit nama module yang digunakan
+
+	
